@@ -5,6 +5,5 @@ repositories {
 }
 
 dependencies {
-    compile 'javax.vecmath:vecmath:1.5.2'
     testCompile 'junit:junit:4.12'
 }
