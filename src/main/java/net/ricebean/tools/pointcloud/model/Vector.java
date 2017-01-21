@@ -85,6 +85,15 @@ public class Vector {
     }
 
     /**
+     * Returns the length of this vector.
+     *
+     * @return The length of this vector
+     */
+    public final float length() {
+        return (float) Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+    }
+
+    /**
      * Returns the squared length of the current vector.
      *
      * @return The squared length of the current vector
@@ -116,6 +125,20 @@ public class Vector {
                 this.x + other.x,
                 this.y + other.y,
                 this.z + other.z
+        );
+    }
+
+    /**
+     * Normalizes this vector.
+     */
+    public final Vector normalize()
+    {
+        float factor = 1 / length();
+
+        return new Vector(
+                this.x * factor,
+                this.y * factor,
+                this.z * factor
         );
     }
 

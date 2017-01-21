@@ -39,7 +39,7 @@ public class PointCloudCrustImpl implements PointCloudCrust {
      * @return List of triangles representing the crust of the point cloud.
      */
     @Override
-    public List<Triangle> computeCrustTriangles(double radius) {
+    public List<Triangle> computeCrustTriangles(float radius) {
 
         // iterate over all triangles
         long startTime = System.currentTimeMillis();
@@ -50,8 +50,14 @@ public class PointCloudCrustImpl implements PointCloudCrust {
             for (int corner_2 = corner_1 + 1; corner_2 < pointCloud.length; corner_2++) {
                 for (int corner_3 = corner_2 + 1; corner_3 < pointCloud.length; corner_3++) {
 
+                    // the triangle
+                    Vector[] triangle = new Vector[]{pointCloud[corner_1], pointCloud[corner_2], pointCloud[corner_3]};
+
                     // calculate the center of the triangle
-                    Vector triangleCenter = triangleCenter(pointCloud[corner_1], pointCloud[corner_2], pointCloud[corner_3]);
+                    Vector triangleCenter = triangleCenter(triangle);
+
+                    // get both ball centers
+                    Vector[] ballCenters = ballCenter(radius, triangle, triangleCenter);
 
                     i++;
                 }
@@ -65,14 +71,12 @@ public class PointCloudCrustImpl implements PointCloudCrust {
     }
 
     /**
-     * Returns the center of a triangle.
+     * Returns the circumcenter of a triangle.
      *
-     * @param corner_1 Point of corner 1 in the triangle.
-     * @param corner_2 Point of corner 2 in the triangle.
-     * @param corner_3 Point of corner 3 in the triangle.
+     * @param triangle The tree vectors defining a the triangle.
      * @return The center point of the triangle.
      */
-    private Vector triangleCenter(Vector corner_1, Vector corner_2, Vector corner_3) {
+    private Vector triangleCenter(Vector[] triangle) {
 
         // Algorithm:
         //
@@ -83,8 +87,8 @@ public class PointCloudCrustImpl implements PointCloudCrust {
         //                                                by Jonathan R Shewchuk
         //                                               (http://www.ics.uci.edu/~eppstein/junkyard/circumcenter.html)
 
-        Vector ac = corner_3.subtract(corner_1);
-        Vector ab = corner_2.subtract(corner_1);
+        Vector ac = triangle[2].subtract(triangle[0]);
+        Vector ab = triangle[1].subtract(triangle[0]);
 
         Vector abXac = ab.cross(ac);
 
@@ -97,26 +101,52 @@ public class PointCloudCrustImpl implements PointCloudCrust {
         // f = 2 | (b-a)x(c-a) |^2
         float f = 2f * abXac.lengthSquared();
 
-
+        // get final vector
         Vector v = v1.add(v2).scale(1 / f);
+        return triangle[0].add(v);
+    }
 
-        return corner_1.add(v);
+    /**
+     * Returns the center of the ball with defined radius and which contains the three points defined on the surface.
+     * @param radius The radius of the ball.
+     * @param triangle Array of corners contained by the surface
+     * @param triangleCenter The center of the triangle.
+     * @return The two vectors of the centers of the two ball.
+     */
+    private Vector[] ballCenter(float radius, Vector[] triangle, Vector triangleCenter) {
 
-//       ==============================
-//        - Vector3f a,b,c // are the 3 pts of the tri
-//
-//        - Vector3f ac = c - a ;
-//        - Vector3f ab = b - a ;
-//        - Vector3f abXac = ab.cross( ac ) ;
-//
-//        // this is the vector from a TO the circumsphere center
-//        - Vector3f toCircumsphereCenter = (abXac.cross( ab )*ac.len2() + ac.cross( abXac )*ab.len2()) / (2.f*abXac.len2()) ;
-//        - float circumsphereRadius = toCircumsphereCenter.len() ;
-//
-//        // The 3 space coords of the circumsphere center then:
-//        - Vector3f ccs = a  +  toCircumsphereCenter ; // now this is the actual 3space location
+        // vector: corner 0 (a) to triangle center (m)
+        Vector am = triangleCenter.subtract(triangle[0]);
 
+        // length: triangle center (m) to ball center (h) (pythagoras)
+        float amLen = am.length();
 
+        if (amLen > radius) {
+            // ball is to small
+            return null;
+        }
 
+        float mhLen = (float) Math.sqrt(radius * radius - amLen * amLen);
+
+        // compute orthogonal vector of triangle
+        Vector ab = triangle[1].subtract(triangle[0]);
+        Vector orth = am.cross(ab);
+
+        if(orth.length() == 0) {
+            Vector ac = triangle[2].subtract(triangle[0]);
+            orth = am.cross(ac);
+        }
+
+        // normalized vector: triangle center (m) to ball center (h)
+        Vector mhNorm = orth.normalize();
+
+        // compute and return centers of the two balls (vector addition)
+        Vector mh_1 = mhNorm.scale(mhLen);
+        Vector mh_2 = mhNorm.scale(mhLen * -1);
+
+        return new Vector[]{
+                triangleCenter.add(mh_1),
+                triangleCenter.add(mh_2)
+        };
     }
 }

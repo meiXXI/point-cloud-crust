@@ -15,5 +15,5 @@ public interface PointCloudCrust {
      * @param radius The radius of the analyze ball.
      * @return List of triangles representing the crust of the point cloud.
      */
-    public List<Triangle> computeCrustTriangles(double radius);
+    public List<Triangle> computeCrustTriangles(float radius);
 }
