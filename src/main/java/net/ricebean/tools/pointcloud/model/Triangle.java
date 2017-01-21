@@ -53,4 +53,13 @@ public class Triangle {
     public int getCorner_3() {
         return corner_3;
     }
+
+    @Override
+    public String toString() {
+        return "Triangle{" +
+                "corner_1=" + corner_1 +
+                ", corner_2=" + corner_2 +
+                ", corner_3=" + corner_3 +
+                '}';
+    }
 }

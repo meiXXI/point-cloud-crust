@@ -1,6 +1,5 @@
 package net.ricebean.tools.pointcloud;
 
-import net.ricebean.tools.pointcloud.model.Point;
 import net.ricebean.tools.pointcloud.model.Triangle;
 
 import java.util.List;
