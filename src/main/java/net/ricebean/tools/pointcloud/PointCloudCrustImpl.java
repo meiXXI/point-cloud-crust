@@ -3,9 +3,9 @@ package net.ricebean.tools.pointcloud;
 import net.ricebean.tools.pointcloud.model.Vector;
 import net.ricebean.tools.pointcloud.model.Triangle;
 
-import javax.vecmath.Vector3f;
-import javax.xml.bind.ValidationEvent;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Implementation to find the crust of a point cloud.
@@ -44,9 +44,10 @@ public class PointCloudCrustImpl implements PointCloudCrust {
         // iterate over all triangles
         long startTime = System.currentTimeMillis();
 
-        int i = 0;
+        List<Triangle> triangles = new ArrayList<>(pointCloud.length);
 
-        for (int corner_1 = 0; corner_1 < pointCloud.length; corner_1++) {
+
+        IntStream.range(0, pointCloud.length).forEach(corner_1 -> {
             for (int corner_2 = corner_1 + 1; corner_2 < pointCloud.length; corner_2++) {
                 for (int corner_3 = corner_2 + 1; corner_3 < pointCloud.length; corner_3++) {
 
@@ -56,18 +57,35 @@ public class PointCloudCrustImpl implements PointCloudCrust {
                     // calculate the center of the triangle
                     Vector triangleCenter = triangleCenter(triangle);
 
-                    // get both ball centers
-                    Vector[] ballCenters = ballCenter(radius, triangle, triangleCenter);
+                    if (triangleCenter != null) {
+                        // get both ball centers
+                        Vector[] ballCenters = ballCenter(radius, triangle, triangleCenter);
 
-                    i++;
+                        // analyze triangle
+                        if (ballCenters != null) {
+                            boolean keep = analyzeTriangle(triangle, ballCenters, radius, pointCloud);
+
+                            if (keep) {
+                                triangles.add(new Triangle(corner_1, corner_2, corner_3));
+                            }
+                        }
+                    }
                 }
             }
-        }
 
-        System.out.print("Number of Triangles: " + i);
-        System.out.print("Time: " + (System.currentTimeMillis() - startTime) + " ms");
+            System.out.println(
+                    String.format(
+                            "Compute point %d of %d. - Triangles found: %d",
+                            corner_1,
+                            pointCloud.length,
+                            triangles.size())
+            );
+        });
 
-        return null;
+        System.out.println("Time: " + (System.currentTimeMillis() - startTime) + " ms");
+        System.out.println("Number of Triangles: " + triangles.size());
+
+        return triangles;
     }
 
     /**
@@ -92,6 +110,10 @@ public class PointCloudCrustImpl implements PointCloudCrust {
 
         Vector abXac = ab.cross(ac);
 
+        if (abXac.length() == 0) {
+            return null;
+        }
+
         // v1 = |c-a|^2 [(b-a)x(c-a)]x(b-a)
         Vector v1 = abXac.cross(ab).scale(ac.lengthSquared());
 
@@ -108,8 +130,9 @@ public class PointCloudCrustImpl implements PointCloudCrust {
 
     /**
      * Returns the center of the ball with defined radius and which contains the three points defined on the surface.
-     * @param radius The radius of the ball.
-     * @param triangle Array of corners contained by the surface
+     *
+     * @param radius         The radius of the ball.
+     * @param triangle       Array of corners contained by the surface
      * @param triangleCenter The center of the triangle.
      * @return The two vectors of the centers of the two ball.
      */
@@ -132,7 +155,7 @@ public class PointCloudCrustImpl implements PointCloudCrust {
         Vector ab = triangle[1].subtract(triangle[0]);
         Vector orth = am.cross(ab);
 
-        if(orth.length() == 0) {
+        if (orth.length() == 0) {
             Vector ac = triangle[2].subtract(triangle[0]);
             orth = am.cross(ac);
         }
@@ -148,5 +171,49 @@ public class PointCloudCrustImpl implements PointCloudCrust {
                 triangleCenter.add(mh_1),
                 triangleCenter.add(mh_2)
         };
+    }
+
+    /**
+     * Analyze the given triangle
+     *
+     * @param triangle    The given triangle.
+     * @param ballCenters The two ball centers for the given triangle
+     * @param radius      The radius of the ball
+     * @param pointCloud  The point cloud.
+     * @return True in case the triangle is part of the crust, otherwise false.
+     */
+    private boolean analyzeTriangle(Vector[] triangle, Vector[] ballCenters, float radius, Vector[] pointCloud) {
+
+        float tolerance = 0.01f;
+        Vector ball;
+
+        // keep flag (result)
+        boolean keep = true;
+
+        // analyze ball ONE
+        ball = ballCenters[0];
+
+        for (int i = 0; i < pointCloud.length && keep; i++) {
+            if (ball.subtract(pointCloud[i]).length() < radius - tolerance) {
+                keep = false;
+            }
+        }
+
+        // analyze ball TWO (if required)
+        if (!keep) {
+            // reset flag
+            keep = true;
+
+            ball = ballCenters[1];
+
+            for (int i = 0; i < pointCloud.length && keep; i++) {
+                if (ball.subtract(pointCloud[i]).length() < radius - tolerance) {
+                    keep = false;
+                }
+            }
+        }
+
+        // return result
+        return keep;
     }
 }

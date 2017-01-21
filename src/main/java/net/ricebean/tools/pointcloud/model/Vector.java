@@ -5,6 +5,8 @@ package net.ricebean.tools.pointcloud.model;
  */
 public class Vector {
 
+    private final String name;
+
     private final float x;
 
     private final float y;
@@ -26,6 +28,19 @@ public class Vector {
      * @param z The Z coordinate of the point.
      */
     public Vector(float x, float y, float z) {
+        this(x,y,z,null);
+    }
+
+    /**
+     * Custom constructor.
+     *
+     * @param x The X coordinate of the point.
+     * @param y The Y coordinate of the point.
+     * @param z The Z coordinate of the point.
+     * @param z Name of the point.
+     */
+    public Vector(float x, float y, float z, String name) {
+        this.name = name;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -56,6 +71,15 @@ public class Vector {
      */
     public float getZ() {
         return z;
+    }
+
+    /**
+     * Getter for the  name of the point.
+     *
+     * @return The name of the point.
+     */
+    public String getName() {
+        return name;
     }
 
     /**
