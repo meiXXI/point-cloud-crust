@@ -296,7 +296,8 @@ public class PointCloudCrustImplTest {
             // point cloud
             if (pointCloud.size() > i) {
                 Vector v = pointCloud.get(i);
-                bw.write(String.format("%f\t%f\t%f\t%s\t", v.getX(), v.getY(), v.getZ(), v.getName()));
+                String color = "#cccccc";
+                bw.write(String.format("%f\t%f\t%f\t%s\t%s\t", v.getX(), v.getY(), v.getZ(), v.getName(), color));
             } else {
                 bw.write("\t\t\t");
             }
@@ -304,12 +305,11 @@ public class PointCloudCrustImplTest {
             // triangles
             if (triangles.size() > i) {
                 Triangle t = triangles.get(i);
-                bw.write(String.format("%d\t%d\t%d\t", t.getCorner_1(), t.getCorner_2(), t.getCorner_3()));
+                String color = "#cccccc"; // computeColorFromLab(triangle);
+                bw.write(String.format("%d\t%d\t%d\t%s\t", t.getCorner_1(), t.getCorner_2(), t.getCorner_3(), color));
             } else {
                 bw.write("\t\t\t");
             }
-
-            bw.write("#cccccc\t2");
 
             // new line
             bw.newLine();

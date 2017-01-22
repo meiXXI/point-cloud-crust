@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
  *
  * @Author: Stefan Meissner
  */
-public class PointCloudCrustImpl implements PointCloudCrust {
+class PointCloudCrustImpl implements PointCloudCrust {
 
     private final Vector[] pointCloud;
 
@@ -28,7 +28,7 @@ public class PointCloudCrustImpl implements PointCloudCrust {
      *
      * @param pointCloud The point cloud.
      */
-    public PointCloudCrustImpl(List<Vector> pointCloud) {
+    PointCloudCrustImpl(List<Vector> pointCloud) {
         this.pointCloud = pointCloud.toArray(new Vector[]{});
     }
 
@@ -41,13 +41,10 @@ public class PointCloudCrustImpl implements PointCloudCrust {
     @Override
     public List<Triangle> computeCrustTriangles(float radius) {
 
-        // iterate over all triangles
-        long startTime = System.currentTimeMillis();
-
         List<Triangle> triangles = new ArrayList<>(pointCloud.length);
 
-
-        IntStream.range(0, pointCloud.length).forEach(corner_1 -> {
+        // iterate over all triangles
+        IntStream.range(0, pointCloud.length).parallel().forEach(corner_1 -> {
             for (int corner_2 = corner_1 + 1; corner_2 < pointCloud.length; corner_2++) {
                 for (int corner_3 = corner_2 + 1; corner_3 < pointCloud.length; corner_3++) {
 
@@ -72,18 +69,7 @@ public class PointCloudCrustImpl implements PointCloudCrust {
                     }
                 }
             }
-
-            System.out.println(
-                    String.format(
-                            "Compute point %d of %d. - Triangles found: %d",
-                            corner_1,
-                            pointCloud.length,
-                            triangles.size())
-            );
         });
-
-        System.out.println("Time: " + (System.currentTimeMillis() - startTime) + " ms");
-        System.out.println("Number of Triangles: " + triangles.size());
 
         return triangles;
     }

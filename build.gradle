@@ -1,4 +1,10 @@
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = 'net.ricebean.tools.pointcloud'
+archivesBaseName = "PointCloudCrust"
+version = '0.1'
 
 repositories {
     jcenter()
@@ -6,4 +12,69 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:4.12'
+}
+
+artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from tasks.javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'PointCloudCrust'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'Implementation of the PointCloudCrust Algorithm.'
+                url 'https://github.com/ricebean-net/PointCloudCrust'
+
+                scm {
+                    connection 'scm:git@github.com:ricebean-net/PointCloudCrust.git'
+                    developerConnection 'scm:git@github.com:ricebean-net/PointCloudCrust.git'
+                    url 'https://github.com/ricebean-net/PointCloudCrust.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'meixi'
+                        name 'Stefan Meissner'
+                    }
+                }
+            }
+        }
+    }
 }
