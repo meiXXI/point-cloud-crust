@@ -4,8 +4,11 @@ The Algorithm does not only create the outer crust but also visualize innersided
 
 ![Color Space triangulated by Point Cloud Crust Algorithm.](https://github.com/ricebean-net/PointCloudCrust/blob/master/docs/point-cloud-crust-algorithm.png "Color Space triangulated by Point Cloud Crust Algorithm.")
 
+
+
 ## Groovy Sample Code
-Here a Groovy sample code explaining how to use the PointCloudCrust library. Most lines in this sample are for data preparation and the CSV output generation. The actuall processing are two lines only. The output of this script is a list of points plus a list of triangles stored in one CSV file. This file can be used for Mesh libraries in order to visualize the model.
+Here a Groovy sample code explaining how to use the PointCloudCrust library. Most lines in this sample are for data preparation and the CSV output generation. The actual processing are two lines only.
+The output of this script is a list of points plus a list of triangles stored in a CSV file. This file can be used for Mesh libraries or other visualization tools in order to visualize the 3D model.
 
 ```groovy
 import net.ricebean.tools.pointcloud.PointCloudCrust
