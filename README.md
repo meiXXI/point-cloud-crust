@@ -4,8 +4,72 @@ The Algorithm does not only create the outer crust but also visualize innersided
 
 ![Color Space triangulated by Point Cloud Crust Algorithm.](https://github.com/ricebean-net/PointCloudCrust/blob/master/docs/point-cloud-crust-algorithm.png "Color Space triangulated by Point Cloud Crust Algorithm.")
 
-## Sampel code
+## Groovy Sample Code
+Here a Groovy sample code explaining how to use the PointCloudCrust library. Most lines in this sample are for data preparation and the CSV output generation. The actuall processing are two lines only. The output of this script is a list of points plus a list of triangles stored in one CSV file. This file can be used for Mesh libraries in order to visualize the model.
+
 ```groovy
-var s = "JavaScript syntax highlighting";
-alert(s);
+import net.ricebean.tools.pointcloud.PointCloudCrust
+import net.ricebean.tools.pointcloud.PointCloudCrustFactory
+import net.ricebean.tools.pointcloud.model.Triangle
+import net.ricebean.tools.pointcloud.model.Vector
+
+import java.nio.file.Paths
+
+@Grapes(
+        @Grab(group='net.ricebean.tools.pointcloud', module='PointCloudCrust', version='0.1')
+)
+
+// read points from file located on github.com (last three columns) - INPUT
+List<String> points = new URL (
+        "https://raw.githubusercontent.com/ricebean-net/PointCloudCrust/master/src/test/resources/point_cloud_1.txt"
+).getText().readLines()
+
+// prepare input
+List<Vector> pointCloud = new ArrayList<>(points.size())
+
+points.forEach{
+    String[] p = it.split()
+    pointCloud.add(new Vector(
+            Float.valueOf(p[8]),
+            Float.valueOf(p[9]),
+            Float.valueOf(p[10]),
+            p[0]
+    ))
+}
+
+// calculate crust - PROCESSING
+PointCloudCrust pointCloudCrust = PointCloudCrustFactory.newInstance(pointCloud)
+List<Triangle> triangles = pointCloudCrust.computeCrustTriangles(20f)
+
+
+// create CSV Output - OUTPUT
+int noLines = pointCloud.size() > triangles.size() ? pointCloud.size() : triangles.size();
+
+File file = Paths.get(
+        System.getProperty("user.home"),
+        "point-cloud-crust-triangulation-${System.currentTimeMillis()}.csv"
+).toFile()
+
+(0..noLines - 1).each {
+    String[] p = points.get(it).split()
+
+    file << "${p[0]}\t"
+
+    // point cloud (X / Y / Z)
+    if (pointCloud.size() > it) {
+        file << "${p[8]}\t${p[9]}\t${p[10]}\t"
+    } else {
+        file << "\t\t\t"
+    }
+
+    // triangles
+    if (triangles.size() > it) {
+        Triangle t = triangles.get(it);
+        file << "${t.getCorner_1()}\t${t.getCorner_2()}\t${t.getCorner_3()}\t"
+    } else {
+        file << "\t\t\t"
+    }
+
+    file << ("\n")
+}
 ```
