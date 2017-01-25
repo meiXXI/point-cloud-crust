@@ -29,9 +29,6 @@ import net.ricebean.tools.pointcloud.PointCloudCrustFactory
 import net.ricebean.tools.pointcloud.model.Triangle
 import net.ricebean.tools.pointcloud.model.Vector
 
-import java.awt.color.ColorSpace
-import java.awt.color.ICC_ColorSpace
-import java.awt.color.ICC_Profile
 import java.nio.file.Paths
 
 @Grapes(
