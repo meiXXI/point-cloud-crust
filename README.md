@@ -4,7 +4,14 @@ The Algorithm does not only create the outer crust but also visualize innersided
 
 ![Color Space triangulated by Point Cloud Crust Algorithm.](https://github.com/ricebean-net/PointCloudCrust/blob/master/docs/point-cloud-crust-algorithm.png "Color Space triangulated by Point Cloud Crust Algorithm.")
 
-
+## Maven Dependencies
+```
+<dependency>
+    <groupId>net.ricebean.tools.pointcloud</groupId>
+    <artifactId>PointCloudCrust</artifactId>
+    <version>0.1</version>
+</dependency>
+```
 
 ## Groovy Sample Code
 Here a Groovy sample code explaining how to use the PointCloudCrust library. Most lines in this sample are for data preparation and the CSV output generation. The actual processing are two lines only.
