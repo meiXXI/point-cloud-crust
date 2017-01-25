@@ -4,6 +4,11 @@ The Algorithm does not only create the outer crust but also visualize innersided
 
 ![Color Space triangulated by Point Cloud Crust Algorithm.](https://github.com/ricebean-net/PointCloudCrust/blob/master/docs/point-cloud-crust-algorithm.png "Color Space triangulated by Point Cloud Crust Algorithm.")
 
+Most 3D Mesh visualization engines also allow to colorize the object. Here an screen shot of an color space illustrating the colors as well:
+
+![3D Mesh colorzed Color Space.](https://github.com/ricebean-net/PointCloudCrust/blob/master/docs/colorspace.png "3D Mesh colorzed Color Space.")
+
+
 ## Maven Dependencies
 ```
 <dependency>
