@@ -65,9 +65,6 @@ File file = Paths.get(
         "point-cloud-crust-triangulation-${System.currentTimeMillis()}.csv"
 ).toFile()
 
-ICC_Profile ip = ICC_Profile.getInstance( ColorSpace.CS_sRGB );
-ICC_ColorSpace iccColorSpace = new ICC_ColorSpace(ip);
-
 (0..noLines - 1).each {
 
     // point cloud (X / Y / Z)
