@@ -89,3 +89,6 @@ ICC_ColorSpace iccColorSpace = new ICC_ColorSpace(ip);
     file << ("\n")
 }
 ```
+
+## The Point Cloud Crust Algorithm ("The Cheese-Maker")
+The Point Cloud Crust Algorithm iterates over all triangles possible in the point cloud and decides whether to keep or not. Each triangle is being analyzed individually und independently. So, the algorithm can be executed highly scalable. The main class of the algorithm is the [PointCloudCrustImpl](https://github.com/ricebean-net/PointCloudCrust/blob/master/src/main/java/net/ricebean/tools/pointcloud/PointCloudCrustImpl.java) class. The construction of the curst is basically just trigonometry.
