@@ -29,15 +29,14 @@ import java.awt.color.ICC_Profile
 import java.nio.file.Paths
 
 @Grapes(
-        @Grab(group='net.ricebean.tools.pointcloud', module='PointCloudCrust', version='0.1')
+        @Grab(group = 'net.ricebean.tools.pointcloud', module = 'PointCloudCrust', version = '0.1')
 )
 
 // read points from file located on github.com (last three columns) - INPUT
 List<Vector> pointCloud = new ArrayList<>(2000)
 
-List<String> points = new URL (
-        "https://raw.githubusercontent.com/ricebean-net/PointCloudCrust/master/src/test/resources/point_cloud_1.txt"
-).getText().readLines().forEach{
+new URL("https://raw.githubusercontent.com/ricebean-net/PointCloudCrust/master/src/test/resources/point_cloud_1.txt")
+        .getText().readLines().forEach {
     String[] p = it.split()
     pointCloud.add(new Vector(
             Float.valueOf(p[8]),
