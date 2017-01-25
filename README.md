@@ -1,5 +1,5 @@
 # PointCloudCrust Library
-The PointCloudCurst is an implementation of the PointCloudCrust Algorithm (or in-officially called "Cheese-Maker") which builds a crust around a point cloud (triangulation of a point cloud). The input of the algorithm is a list of points located in a three dimensional space plus the radius of a ball and the output is a set of triangles which defines the the "crust".
+The PointCloudCurst is an implementation of the PointCloudCrust Algorithm (or in-officially called "The Cheese-Maker") which builds a crust around a point cloud (triangulation of a point cloud). The input of the algorithm is a list of points located in a three dimensional space plus the radius of a ball and the output is a set of triangles which defines the "crust".
 The Algorithm does not only create the outer crust but also visualize innersided holes, structures and even breakthroughs (like a cheese). A typcial practical use case of the Point Crust Algorithm is the visualization of color spaces:
 
 ![Color Space triangulated by Point Cloud Crust Algorithm.](https://github.com/ricebean-net/PointCloudCrust/blob/master/docs/point-cloud-crust-algorithm.png "Color Space triangulated by Point Cloud Crust Algorithm.")
@@ -54,15 +54,12 @@ File file = Paths.get(
 ).toFile()
 
 (0..noLines - 1).each {
-    String[] p = points.get(it).split()
-
-    file << "${p[0]}\t"
-
     // point cloud (X / Y / Z)
     if (pointCloud.size() > it) {
-        file << "${p[8]}\t${p[9]}\t${p[10]}\t"
+        String[] p = points.get(it).split()
+        file << "${p[0]}\t${p[8]}\t${p[9]}\t${p[10]}\t"
     } else {
-        file << "\t\t\t"
+        file << "\t\t\t\t"
     }
 
     // triangles
