@@ -23,6 +23,9 @@ import net.ricebean.tools.pointcloud.PointCloudCrustFactory
 import net.ricebean.tools.pointcloud.model.Triangle
 import net.ricebean.tools.pointcloud.model.Vector
 
+import java.awt.color.ColorSpace
+import java.awt.color.ICC_ColorSpace
+import java.awt.color.ICC_Profile
 import java.nio.file.Paths
 
 @Grapes(
@@ -30,14 +33,11 @@ import java.nio.file.Paths
 )
 
 // read points from file located on github.com (last three columns) - INPUT
+List<Vector> pointCloud = new ArrayList<>(2000)
+
 List<String> points = new URL (
         "https://raw.githubusercontent.com/ricebean-net/PointCloudCrust/master/src/test/resources/point_cloud_1.txt"
-).getText().readLines()
-
-// prepare input
-List<Vector> pointCloud = new ArrayList<>(points.size())
-
-points.forEach{
+).getText().readLines().forEach{
     String[] p = it.split()
     pointCloud.add(new Vector(
             Float.valueOf(p[8]),
@@ -60,13 +60,17 @@ File file = Paths.get(
         "point-cloud-crust-triangulation-${System.currentTimeMillis()}.csv"
 ).toFile()
 
+ICC_Profile ip = ICC_Profile.getInstance( ColorSpace.CS_sRGB );
+ICC_ColorSpace iccColorSpace = new ICC_ColorSpace(ip);
+
 (0..noLines - 1).each {
+
     // point cloud (X / Y / Z)
     if (pointCloud.size() > it) {
-        String[] p = points.get(it).split()
-        file << "${p[0]}\t${p[8]}\t${p[9]}\t${p[10]}\t"
+        Vector p = pointCloud.get(it)
+        file << "${p.getX()}\t${p.getY()}\t${p.getZ()}\t"
     } else {
-        file << "\t\t\t\t"
+        file << "\t\t\t"
     }
 
     // triangles
