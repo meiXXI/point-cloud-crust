@@ -10,6 +10,7 @@ Most 3D Mesh visualization engines also allow to colorize the object. Here an sc
 
 
 ## Maven Dependencies
+The implementation of the Point Cloud Crust Algorithm is also available in the Central Maven Repository:
 ```
 <dependency>
     <groupId>net.ricebean.tools.pointcloud</groupId>
