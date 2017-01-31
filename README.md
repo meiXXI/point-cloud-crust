@@ -87,4 +87,12 @@ File file = Paths.get(
 ## The Point Cloud Crust Algorithm ("The Cheese-Maker")
 The Point Cloud Crust Algorithm iterates over all triangles possible in the point cloud and decides whether to keep or not. Each triangle is being analyzed individually und independently. So, the algorithm can be executed highly scalable. The main class of the algorithm is the [PointCloudCrustImpl](https://github.com/ricebean-net/PointCloudCrust/blob/master/src/main/java/net/ricebean/tools/pointcloud/PointCloudCrustImpl.java) class. The construction of the curst is basically just trigonometry.
 
-![Explaination Point Cloud Crust Algorithm.](https://github.com/ricebean-net/PointCloudCrust/blob/master/docs/point-cloud-crust-explaination.png "Explaination Poin Cloud Crust Algorithm.")
+### Explanation 
+Here the 2-dimensional explanation of the Point Cloud Algorithm. In a two dimensional world, triangles are substituted by lines and balls by circles:
+
+![Explanation Point Cloud Crust Algorithm.](https://github.com/ricebean-net/PointCloudCrust/blob/master/docs/point-cloud-crust-explaination.png "Explanation Point Cloud Crust Algorithm.")
+
+
+Fist of all, the radius of the circle has to be defined. The radius defines the level of granularity being visualized in the final 2D model.
+When starting, the algorithm iterates over all available lines in the 2D point cloud. Each line is analyzed individually. In order to find the "surface-lines", two circles with the initially defined radius are being calculated. Both circles passes the two points of the line. If one of the both circles has no other points inside, the line is  as "surface-line" and is being cached for the output. Lines which have points in both circles are being ignored in the final model.
+
