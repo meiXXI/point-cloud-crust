@@ -88,7 +88,7 @@ File file = Paths.get(
 The Point Cloud Crust Algorithm iterates over all triangles possible in the point cloud and decides whether to keep or not. Each triangle is being analyzed individually und independently. So, the algorithm can be executed highly scalable. The main class of the algorithm is the [PointCloudCrustImpl](https://github.com/ricebean-net/PointCloudCrust/blob/master/src/main/java/net/ricebean/tools/pointcloud/PointCloudCrustImpl.java) class. The construction of the curst is basically just trigonometry.
 
 ### Explanation 
-Here the 2-dimensional explanation of the Point Cloud Algorithm. In a two dimensional world, triangles are substituted by lines and balls by circles:
+Here the 2-dimensional explanation of the Point Cloud Algorithm. In a two dimensional world, triangles can be substituted by lines and balls by circles:
 
 ![Explanation Point Cloud Crust Algorithm.](https://github.com/ricebean-net/PointCloudCrust/blob/master/docs/point-cloud-crust-explaination.png "Explanation Point Cloud Crust Algorithm.")
 
