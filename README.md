@@ -93,6 +93,6 @@ Here the 2-dimensional explanation of the Point Cloud Algorithm. In a two dimens
 ![Explanation Point Cloud Crust Algorithm.](https://github.com/ricebean-net/PointCloudCrust/blob/master/docs/point-cloud-crust-explaination.png "Explanation Point Cloud Crust Algorithm.")
 
 
-Fist of all, the radius of the circle has to be defined. The radius defines the level of granularity being visualized in the final 2D model.
-When starting, the algorithm iterates over all available lines in the 2D point cloud. Each line is analyzed individually. In order to find the "surface-lines", two circles with the initially defined radius are being calculated. Both circles passes the two points of the line. If one of the both circles has no other points inside, the line is  as "surface-line" and is being cached for the output. Lines which have points in both circles are being ignored in the final model.
+Fist of all, a radius has to be defined. The radius defines the level of granularity being visualized in the final model.
+When starting, the algorithm iterates over all available lines in the 2D point cloud. Each line is analyzed individually. In order to find out the "surface-lines", two circles with the initially defined radius are being calculated. Both circles passes the two points of the line. If one of the both circles has no other points inside, the line is a "surface-line" and is being cached for the output. Lines which have points in both circles are being skipped.
 
